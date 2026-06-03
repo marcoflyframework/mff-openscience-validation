@@ -1,0 +1,14 @@
+# Requirements per riprodurre ANALYSIS.ipynb
+# Python 3.11+ raccomandato
+#
+# Install:  pip install -r requirements.txt
+# Esegui:   jupyter nbconvert --execute --to html ANALYSIS.ipynb
+
+pandas>=2.0,<3.0
+numpy>=1.24,<3.0
+matplotlib>=3.7,<4.0
+seaborn>=0.13,<1.0
+scipy>=1.11,<2.0
+statsmodels>=0.14,<1.0
+jupyter>=1.0,<2.0
+nbconvert>=7.0

@@ -1,0 +1,35 @@
+cff-version: 1.2.0
+title: "MFF OpenScience Validation"
+message: "If you use this dataset or analysis, please cite as below."
+type: dataset
+authors:
+  - given-names: "Marco"
+    family-names: "Motta"
+    orcid: "https://orcid.org/0009-0001-9118-6183"
+    affiliation: "MarcoFLY Framework, independent researcher"
+  - name: "MFF OpenScience Validation Contributors"
+    website: "https://marcofly.app/supporters"
+repository-code: "https://github.com/marcoflyframework/mff-openscience-validation"
+url: "https://marcofly.app/contribute-time"
+abstract: >
+  Community-driven validation of the MarcoFLY Framework (MFF-EX), a prompt
+  engineering protocol based on epistemic labels and anti-circularity.
+  Preregistered crowdsourced human evaluation testing 5 hypotheses
+  (hallucination reduction, label calibration, no regression, language-agnostic,
+  model-agnostic) across multiple AI providers in IT and EN.
+keywords:
+  - prompt-engineering
+  - llm-evaluation
+  - open-science
+  - crowdsourced-validation
+  - epistemic-labels
+  - mff-ex
+  - mff-framework
+  - hallucination
+  - calibration
+license: CC-BY-4.0
+date-released: 2026-06-03
+references:
+  - type: data
+    title: "OSF Preregistration"
+    url: "https://osf.io/9ehgx/"

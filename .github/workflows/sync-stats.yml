@@ -1,0 +1,106 @@
+name: Sync stats from marcofly.app
+
+# Aggiorna DATA/stats.json + DATA/supporters.json + DATA/submissions.csv
+# dal sito MFF ogni 24 ore. Commit automatico se ci sono cambiamenti.
+
+on:
+  schedule:
+    # Ogni giorno alle 03:00 UTC (04:00/05:00 Roma)
+    - cron: "0 3 * * *"
+  workflow_dispatch:  # Permette trigger manuale dalla UI GitHub
+
+permissions:
+  contents: write  # Per commit automatico
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Fetch stats.json
+        run: |
+          mkdir -p DATA
+          curl -fsSL "https://marcofly.app/api/validation-stats" -o DATA/stats.json || {
+            echo "::warning::Failed to fetch validation-stats endpoint. Skipping."
+            exit 0
+          }
+          # Pretty-print per leggibilità diff
+          python3 -c "import json; print(json.dumps(json.load(open('DATA/stats.json')), indent=2))" > DATA/stats.tmp.json
+          mv DATA/stats.tmp.json DATA/stats.json
+
+      - name: Fetch supporters.json
+        run: |
+          curl -fsSL "https://marcofly.app/api/validation-supporters" -o DATA/supporters.json || {
+            echo "::warning::Failed to fetch validation-supporters endpoint. Skipping."
+            exit 0
+          }
+          python3 -c "import json; print(json.dumps(json.load(open('DATA/supporters.json')), indent=2))" > DATA/supporters.tmp.json
+          mv DATA/supporters.tmp.json DATA/supporters.json
+
+      - name: Fetch submissions.csv (public anonymized)
+        run: |
+          curl -fsSL "https://marcofly.app/api/validation-submissions.csv" -o DATA/submissions.csv.new || {
+            echo "::warning::Failed to fetch submissions.csv endpoint. Skipping."
+            exit 0
+          }
+          # Verifica che il file scaricato sia un CSV valido (almeno una riga di header)
+          if [ -s DATA/submissions.csv.new ]; then
+            mv DATA/submissions.csv.new DATA/submissions.csv
+          else
+            echo "::warning::Downloaded submissions.csv is empty. Skipping replace."
+            rm -f DATA/submissions.csv.new
+          fi
+
+      - name: Auto-generate CONTRIBUTORS.md section
+        run: |
+          # Estrae la lista supporters da DATA/supporters.json e la inietta tra i marker AUTOGEN-START/END
+          python3 << 'PYEOF'
+          import json, re
+          try:
+              sup = json.load(open('DATA/supporters.json'))
+              supporters = sup.get('supporters', [])
+              if supporters:
+                  # Ordina alfabeticamente (case-insensitive)
+                  supporters = sorted(supporters, key=lambda s: s.get('nickname', '').lower())
+                  rows = ["| Nickname | Submission | Badge | Prima | Ultima |", "|---|---|---|---|---|"]
+                  for s in supporters:
+                      nick = s.get('nickname', '?')
+                      cnt = s.get('submission_count', 0)
+                      badge = s.get('badge', '🥉')
+                      first = s.get('first_submission_at', '—')[:10]
+                      last = s.get('last_submission_at', '—')[:10]
+                      rows.append(f"| {nick} | {cnt} | {badge} | {first} | {last} |")
+                  table = "\n".join(rows)
+              else:
+                  table = "_Nessun contributor opt-in ancora. Siate i primi!_"
+
+              with open('CONTRIBUTORS.md', 'r', encoding='utf-8') as f:
+                  content = f.read()
+              new_content = re.sub(
+                  r"<!-- AUTOGEN-START.*?-->.*?<!-- AUTOGEN-END -->",
+                  f"<!-- AUTOGEN-START: do not modify manually. Aggiornato automaticamente via sync-stats.yml -->\n\n{table}\n\n<!-- AUTOGEN-END -->",
+                  content,
+                  flags=re.DOTALL,
+              )
+              with open('CONTRIBUTORS.md', 'w', encoding='utf-8') as f:
+                  f.write(new_content)
+              print(f"✓ CONTRIBUTORS.md updated with {len(supporters)} supporters")
+          except FileNotFoundError:
+              print("⚠ DATA/supporters.json not found, skip")
+          except Exception as e:
+              print(f"⚠ Error updating CONTRIBUTORS.md: {e}")
+          PYEOF
+
+      - name: Commit if changes
+        run: |
+          git config user.name "MFF Stats Bot"
+          git config user.email "bot@marcofly.app"
+          git add DATA/ CONTRIBUTORS.md
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "chore(data): sync stats from marcofly.app ($(date -u +%Y-%m-%d))"
+            git push
+          fi

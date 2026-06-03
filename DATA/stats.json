@@ -1,0 +1,34 @@
+{
+  "generated_at": "2026-06-03T00:00:00Z",
+  "total_submissions": 0,
+  "valid_submissions": 0,
+  "flagged_submissions": 0,
+  "rejected_submissions": 0,
+  "goal_total": 1000,
+  "progress_percent": 0,
+  "milestones": {
+    "100": false,
+    "250": false,
+    "500": false,
+    "750": false,
+    "1000": false
+  },
+  "validators_count": 0,
+  "validators_opted_in": 0,
+  "by_category": {
+    "fatti": 0,
+    "calcoli": 0,
+    "ragionamento": 0,
+    "opinione": 0,
+    "creativita": 0
+  },
+  "by_language": {
+    "IT": 0,
+    "EN": 0
+  },
+  "by_provider": [],
+  "mean_rating_baseline": null,
+  "mean_rating_mff": null,
+  "mean_delta": null,
+  "note": "Placeholder iniziale — aggiornato automaticamente via .github/workflows/sync-stats.yml ogni 24h da marcofly.app/api/validation-stats"
+}

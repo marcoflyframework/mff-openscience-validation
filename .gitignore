@@ -1,0 +1,43 @@
+# MFF OpenScience Validation — .gitignore
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.venv/
+venv/
+env/
+.ipynb_checkpoints/
+*.egg-info/
+
+# Jupyter notebook output cells (committiamo solo notebook puliti per diff readability)
+# Decommentare se vuoi committare solo scheletro:
+# *.ipynb
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Analysis outputs (li ricostruisce chiunque via ANALYSIS.ipynb)
+DATA/analysis_results.json
+*.html
+
+# Drafts personali (non vanno nel repo pubblico)
+DRAFT_*.md
+PRIVATE_*.md
+TODO.md
+NOTES.md
+
+# Lock files non necessari
+poetry.lock
+Pipfile.lock

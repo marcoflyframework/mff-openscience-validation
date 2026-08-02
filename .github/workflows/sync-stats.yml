@@ -2,6 +2,19 @@ name: Sync stats from marcofly.app
 
 # Aggiorna DATA/stats.json + DATA/supporters.json + DATA/submissions.csv
 # dal sito MFF ogni 24 ore. Commit automatico se ci sono cambiamenti.
+#
+# ⚠️ PERCHÉ QUESTO FILE È STATO RISCRITTO (2026-08-03).
+# La versione precedente aveva, su ogni fetch:
+#     curl -fsSL ... || { echo "::warning::Failed ... Skipping."; exit 0; }
+# `exit 0` fa uscire la shell dello step con successo, quindi il job risultava
+# VERDE anche quando non scaricava niente. I tre endpoint del sito erano andati
+# in 404 col passaggio alla v2 e questo workflow ha continuato a girare ogni
+# notte dichiarando «success» per settimane, mentre DATA/ restava fermo al
+# segnaposto del 12 giugno e le submission vere si accumulavano in produzione.
+#
+# Un segno di spunta verde che certifica che non è successo niente è peggio di
+# un rosso: un rosso lo guardi. Da qui in poi, se un fetch fallisce il job
+# FALLISCE — e GitHub manda la notifica.
 
 on:
   schedule:
@@ -12,6 +25,9 @@ on:
 permissions:
   contents: write  # Per commit automatico
 
+env:
+  BASE_URL: https://marcofly.app
+
 jobs:
   sync:
     runs-on: ubuntu-latest
@@ -19,87 +35,111 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      # `--fail-with-body` invece di `-f`: su errore stampa il corpo della
+      # risposta, che è dove il sito scrive il motivo (`no_db_binding`,
+      # `db_error`). Senza, si vedrebbe solo «exit 22» e si tornerebbe a
+      # indovinare.
       - name: Fetch stats.json
         run: |
+          set -euo pipefail
           mkdir -p DATA
-          curl -fsSL "https://marcofly.app/api/validation-stats" -o DATA/stats.json || {
-            echo "::warning::Failed to fetch validation-stats endpoint. Skipping."
-            exit 0
-          }
-          # Pretty-print per leggibilità diff
-          python3 -c "import json; print(json.dumps(json.load(open('DATA/stats.json')), indent=2))" > DATA/stats.tmp.json
-          mv DATA/stats.tmp.json DATA/stats.json
+          curl --fail-with-body -sSL --retry 3 --retry-delay 5 \
+            "$BASE_URL/api/validation-stats" -o DATA/stats.new.json
+          # Deve essere JSON valido E contenere i campi che il repo pubblica:
+          # un 200 con un corpo inatteso non è un successo.
+          python3 - <<'PY'
+          import json, sys
+          d = json.load(open('DATA/stats.new.json'))
+          for k in ('total_submissions', 'goal_total', 'progress_percent'):
+              if k not in d:
+                  sys.exit(f"campo mancante in stats.json: {k}")
+          json.dump(d, open('DATA/stats.json', 'w'), indent=2, ensure_ascii=False)
+          print(f"stats.json ok — {d['total_submissions']} submission, obiettivo {d['goal_total']}")
+          PY
+          rm -f DATA/stats.new.json
 
       - name: Fetch supporters.json
         run: |
-          curl -fsSL "https://marcofly.app/api/validation-supporters" -o DATA/supporters.json || {
-            echo "::warning::Failed to fetch validation-supporters endpoint. Skipping."
-            exit 0
-          }
-          python3 -c "import json; print(json.dumps(json.load(open('DATA/supporters.json')), indent=2))" > DATA/supporters.tmp.json
-          mv DATA/supporters.tmp.json DATA/supporters.json
+          set -euo pipefail
+          curl --fail-with-body -sSL --retry 3 --retry-delay 5 \
+            "$BASE_URL/api/validation-supporters" -o DATA/supporters.new.json
+          python3 - <<'PY'
+          import json, sys
+          d = json.load(open('DATA/supporters.new.json'))
+          if 'supporters' not in d:
+              sys.exit("campo mancante in supporters.json: supporters")
+          json.dump(d, open('DATA/supporters.json', 'w'), indent=2, ensure_ascii=False)
+          print(f"supporters.json ok — {len(d['supporters'])} con consenso pubblico")
+          PY
+          rm -f DATA/supporters.new.json
 
-      - name: Fetch submissions.csv (public anonymized)
+      - name: Fetch submissions.csv (open data anonimizzato)
         run: |
-          curl -fsSL "https://marcofly.app/api/validation-submissions.csv" -o DATA/submissions.csv.new || {
-            echo "::warning::Failed to fetch submissions.csv endpoint. Skipping."
-            exit 0
-          }
-          # Verifica che il file scaricato sia un CSV valido (almeno una riga di header)
-          if [ -s DATA/submissions.csv.new ]; then
-            mv DATA/submissions.csv.new DATA/submissions.csv
-          else
-            echo "::warning::Downloaded submissions.csv is empty. Skipping replace."
-            rm -f DATA/submissions.csv.new
+          set -euo pipefail
+          curl --fail-with-body -sSL --retry 3 --retry-delay 5 \
+            "$BASE_URL/api/validation-submissions.csv" -o DATA/submissions.new.csv
+          # Un file vuoto è un guasto. Un file con la SOLA intestazione invece è
+          # legittimo — nessuna submission pubblicabile, oppure righe cancellate
+          # su richiesta GDPR — e va accettato: il sito è la fonte, e un dataset
+          # che non sa rimpicciolirsi non rispetta il diritto alla cancellazione.
+          if [ ! -s DATA/submissions.new.csv ]; then
+            echo "::error::submissions.csv scaricato vuoto (0 byte): non sostituisco i dati esistenti"
+            exit 1
           fi
+          head -1 DATA/submissions.new.csv | grep -q '^id,submitted_at,submitter_hash,' || {
+            echo "::error::intestazione CSV inattesa — il contratto con DATA/schema.md è cambiato?"
+            head -1 DATA/submissions.new.csv
+            exit 1
+          }
+          mv DATA/submissions.new.csv DATA/submissions.csv
+          echo "submissions.csv ok — $(( $(wc -l < DATA/submissions.csv) - 1 )) righe di dati"
 
-      - name: Auto-generate CONTRIBUTORS.md section
+      - name: Rigenera la sezione di CONTRIBUTORS.md
         run: |
-          # Estrae la lista supporters da DATA/supporters.json e la inietta tra i marker AUTOGEN-START/END
-          python3 << 'PYEOF'
-          import json, re
-          try:
-              sup = json.load(open('DATA/supporters.json'))
-              supporters = sup.get('supporters', [])
-              if supporters:
-                  # Ordina alfabeticamente (case-insensitive)
-                  supporters = sorted(supporters, key=lambda s: s.get('nickname', '').lower())
-                  rows = ["| Nickname | Submission | Badge | Prima | Ultima |", "|---|---|---|---|---|"]
-                  for s in supporters:
-                      nick = s.get('nickname', '?')
-                      cnt = s.get('submission_count', 0)
-                      badge = s.get('badge', '🥉')
-                      first = s.get('first_submission_at', '—')[:10]
-                      last = s.get('last_submission_at', '—')[:10]
-                      rows.append(f"| {nick} | {cnt} | {badge} | {first} | {last} |")
-                  table = "\n".join(rows)
-              else:
-                  table = "_Nessun contributor opt-in ancora. Siate i primi!_"
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, re, sys
 
-              with open('CONTRIBUTORS.md', 'r', encoding='utf-8') as f:
-                  content = f.read()
-              new_content = re.sub(
-                  r"<!-- AUTOGEN-START.*?-->.*?<!-- AUTOGEN-END -->",
-                  f"<!-- AUTOGEN-START: do not modify manually. Aggiornato automaticamente via sync-stats.yml -->\n\n{table}\n\n<!-- AUTOGEN-END -->",
-                  content,
-                  flags=re.DOTALL,
-              )
-              with open('CONTRIBUTORS.md', 'w', encoding='utf-8') as f:
-                  f.write(new_content)
-              print(f"✓ CONTRIBUTORS.md updated with {len(supporters)} supporters")
-          except FileNotFoundError:
-              print("⚠ DATA/supporters.json not found, skip")
-          except Exception as e:
-              print(f"⚠ Error updating CONTRIBUTORS.md: {e}")
-          PYEOF
+          sup = json.load(open('DATA/supporters.json')).get('supporters', [])
+          if sup:
+              rows = ["| Nickname | Submission | Badge | Prima | Ultima |", "|---|---|---|---|---|"]
+              for s in sorted(sup, key=lambda s: s.get('nickname', '').lower()):
+                  rows.append("| {} | {} | {} | {} | {} |".format(
+                      s.get('nickname', '?'),
+                      s.get('submission_count', 0),
+                      s.get('badge', ''),
+                      (s.get('first_submission_at') or '—')[:10],
+                      (s.get('last_submission_at') or '—')[:10],
+                  ))
+              table = "\n".join(rows)
+          else:
+              table = "_Nessun contributor opt-in ancora. Siate i primi!_"
 
-      - name: Commit if changes
+          content = open('CONTRIBUTORS.md', encoding='utf-8').read()
+          new, n = re.subn(
+              r"<!-- AUTOGEN-START.*?-->.*?<!-- AUTOGEN-END -->",
+              "<!-- AUTOGEN-START: do not modify manually. Aggiornato automaticamente via sync-stats.yml -->\n\n"
+              + table.replace('\\', '\\\\') + "\n\n<!-- AUTOGEN-END -->",
+              content, flags=re.DOTALL,
+          )
+          # ⚠️ Zero sostituzioni = i marker non ci sono più. Prima veniva
+          # inghiottito da un `except Exception: print(...)`, quindi la tabella
+          # smetteva di aggiornarsi senza che nessuno lo sapesse: lo stesso
+          # difetto del workflow, un livello più in basso.
+          if n == 0:
+              sys.exit("marker AUTOGEN-START/END non trovati in CONTRIBUTORS.md")
+          open('CONTRIBUTORS.md', 'w', encoding='utf-8').write(new)
+          print(f"CONTRIBUTORS.md aggiornato — {len(sup)} supporter")
+          PY
+
+      - name: Commit se ci sono cambiamenti
         run: |
+          set -euo pipefail
           git config user.name "MFF Stats Bot"
           git config user.email "bot@marcofly.app"
           git add DATA/ CONTRIBUTORS.md
           if git diff --cached --quiet; then
-            echo "No changes to commit"
+            echo "Nessun cambiamento da committare"
           else
             git commit -m "chore(data): sync stats from marcofly.app ($(date -u +%Y-%m-%d))"
             git push

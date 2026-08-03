@@ -16,7 +16,7 @@
 
 ## Lista (auto-generata)
 
-<!-- AUTOGEN-START: do not modify manually. Aggiornato automaticamente via sync-stats.yml -->
+<!-- AUTOGEN-START: do not modify manually. Aggiornato automaticamente da mff-cron -->
 
 _Nessun contributor opt-in ancora. Siate i primi!_
 

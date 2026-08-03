@@ -1,11 +1,13 @@
 {
-  "generated_at": "2026-06-03T00:00:00Z",
-  "total_submissions": 0,
-  "valid_submissions": 0,
+  "generated_at": "2026-08-03T00:00:13.846Z",
+  "total_submissions": 1,
+  "valid_submissions": 1,
+  "pending_verified": 0,
   "flagged_submissions": 0,
   "rejected_submissions": 0,
+  "counted_submissions": 1,
   "goal_total": 1000,
-  "progress_percent": 0,
+  "progress_percent": 0.1,
   "milestones": {
     "100": false,
     "250": false,
@@ -13,22 +15,27 @@
     "750": false,
     "1000": false
   },
-  "validators_count": 0,
+  "validators_count": 1,
   "validators_opted_in": 0,
   "by_category": {
     "fatti": 0,
     "calcoli": 0,
     "ragionamento": 0,
     "opinione": 0,
-    "creativita": 0
+    "creativita": 1
   },
   "by_language": {
-    "IT": 0,
+    "IT": 1,
     "EN": 0
   },
-  "by_provider": [],
-  "mean_rating_baseline": null,
-  "mean_rating_mff": null,
-  "mean_delta": null,
-  "note": "Placeholder iniziale — aggiornato automaticamente via .github/workflows/sync-stats.yml ogni 24h da marcofly.app/api/validation-stats"
+  "by_provider": [
+    {
+      "provider": "Mistral",
+      "count": 2
+    }
+  ],
+  "mean_rating_baseline": 3,
+  "mean_rating_mff": 5,
+  "mean_delta": 2,
+  "note": "Statistiche descrittive. L'avanzamento conta le submission non rifiutate (status != 'rejected'), la stessa regola della barra su marcofly.app/contribute/time. I test statistici H1-H5 stanno in ANALYSIS.ipynb."
 }

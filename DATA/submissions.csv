@@ -1,1 +1,81 @@
 id,submitted_at,submitter_hash,prompt_id,prompt_category,prompt_difficulty,language,ai_provider_baseline,ai_provider_mff,output_baseline_length,output_mff_length,output_baseline_text,output_mff_text,rating_baseline,rating_mff,delta,notes,status
+1,2026-08-02T08:21:30.000Z,4ed245e81b0c7ea099f1d9b197db9180d69361dc4011f95033bd77bb9619ca03,P084,creativita,1,IT,Mistral,Mistral,780,3332,"Ecco tre idee per un regalo di compleanno perfetto per un amante della lettura:
+
+1. **Edizione speciale di un libro preferito**
+   Regala una versione illustrata, in pelle o con copertina rigida di un classico o di un autore che ama. Esistono anche edizioni numerate o firmate per collezionisti.
+
+2. **Abonnamento a una piattaforma di lettura**
+   Scegli tra un abbonamento a **Audible** (per audiolibri), **Kindle Unlimited** (per ebook) o **Scribd** (libri, audiolibri e magazine).
+
+3. **Kit di lettura personalizzato**
+   Crea un set con un libro inedito, un segnalibro artigianale, una tazza con una citazione letteraria e una candela profumata per accompagnare le serate di lettura.
+
+Vuoi che le idee siano più originali, economiche o legate a un genere letterario specifico?","[⚡MFF]
+
+---
+**Risposta (Modalità AUTO → G):**
+
+[🔵 PROBABILE][emp]
+Ecco 3 idee per un regalo di compleanno per un amante della lettura, calibrate su gusti generici e accessibilità:
+
+1. **Edizione speciale o libro raro**
+   Un’edizione limitata, illustrata o firmata del suo libro/autore preferito (es. Folio Society, edizioni anniversario).
+
+2. **Abonnamento a una piattaforma di lettura**
+   Abbonamento a **Audible** (audiolibri), **Kindle Unlimited**, o **Scribd** (libri + audiolibri).
+
+3. **Kit di lettura personalizzato**
+   Un set con: libro scelto in base ai suoi gusti, segnalibro artigianale, tazza con citazione letteraria, e una lampada da lettura portatile.
+
+---
+**Note:**
+- Se vuoi idee più mirate, specifica genere letterario preferito, budget, o se predilige cartaceo/digitale.
+- Per verificare disponibilità di edizioni speciali o abbonamenti attivi al 02/08/2026: **[⚫ NON POSSO]** senza grounding web (L4). Vuoi che cerchi online?
+
+[⚡MFF]
+
+---
+**Risposta (Modalità AUTO → EX):**
+
+[🔵 PROBABILE][emp]
+Ecco 3 idee di regalo per un amante della **fantascienza**, con focus su originalità e valore per il lettore:
+
+---
+
+### 1. **Edizione Collezionista di un Classico**
+   - **Esempio:** *""Dune""* (Frank Herbert) in edizione **Folio Society** o *""1984""* (George Orwell) con copertina rigida e illustrazioni esclusive.
+   - **Perché:** Le edizioni speciali sono oggettivamente apprezzate dai collezionisti e offrono un’esperienza di lettura unica.
+   - **Dove:** Siti come **Folio Society**, **Mondadori Store**, o librerie specializzate (es. **Libreria Fantastica** a Milano).
+   - **Costo:** [🟡 FORSE] 40–150€ a seconda del titolo e della rarità.
+
+---
+
+### 2. **Abonnamento a una Rivista di Fantascienza**
+   - **Esempio:** *""Robot""* (la storica rivista italiana di fantascienza, ora in formato digitale) o *""Clarkesworld""* (in inglese, con racconti premiati).
+   - **Perché:** Permette di scoprire nuovi autori e restare aggiornati sulle novità del genere.
+   - **Dove:** Siti ufficiali delle riviste o piattaforme come **Amazon Kindle**.
+   - **Costo:** [🟡 FORSE] 20–60€/anno.
+
+---
+### 3. **Libro + Esperienza Immersiva**
+   - **Esempio:** *""Project Hail Mary""* (Andy Weir) + **kit di astronomia base** (es. mappa stellare o telescopio portatile).
+   - **Perché:** Combina la lettura con un’attività pratica legata ai temi della fantascienza (esplorazione spaziale, tecnologia, futurismo).
+   - **Dove:** Librerie online (es. **Amazon**, **IBS**) + negozi di ottica/astronomia.
+   - **Costo:** [🟡 FORSE] 50–120€.
+
+---
+---
+**ZVE (L2) — Verifica Esterna:**
+── ZVE ──
+**Come verificare:**
+- Per edizioni speciali: controlla la disponibilità su **Folio Society** ([foliosociety.com](https://www.foliosociety.com)) o **Mondadori Store** ([mondadoristore.it](https://www.mondadoristore.it)).
+- Per abbonamenti: visita i siti delle riviste (es. [robot.edizioni-fantascienza.it](https://robot.edizioni-fantascienza.it)).
+- Per kit di astronomia: cerca su **Amazon** o **Telescopi Italia**.
+**Urgenza:** Bassa (i regali sono pianificabili).
+**Rischio:** Basso (nessun impatto irreversibile).
+**Trigger:** Disponibilità limitata per edizioni speciali.
+──────────
+
+---
+**Domanda operativa:**
+Vuoi che cerchi online la disponibilità attuale (02/08/2026) di una di queste idee? Se sì, attiva il toggle 🌐 per il grounding web (L4).",3,5,2,,valid

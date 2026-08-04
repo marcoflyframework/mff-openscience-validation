@@ -2,7 +2,7 @@
 
 > Descrizione campi per i dati open pubblicati in questo repository.
 >
-> Dati aggiornati ogni 24h via [GitHub Action](../.github/workflows/sync-stats.yml) da [marcofly.app/api/validation-stats](https://marcofly.app/api/validation-stats).
+> Dati spinti dal Worker `mff-cron` ogni notte alle 03:00 UTC da [marcofly.app/api/validation-stats](https://marcofly.app/api/validation-stats) (v. [PERCHE-NIENTE-SYNC-WORKFLOW](../.github/PERCHE-NIENTE-SYNC-WORKFLOW.md)).
 
 ---
 
@@ -61,6 +61,7 @@ Statistiche aggregate per la progress bar + dashboard pubblica.
   },
   "validators_count": 87,
   "validators_opted_in": 42,
+
   "by_category": {
     "fatti": 78,
     "calcoli": 65,
@@ -84,12 +85,17 @@ Statistiche aggregate per la progress bar + dashboard pubblica.
   "note": "Statistiche descrittive — analisi statistica con CI/p-value disponibile in ANALYSIS.ipynb dopo milestone 1000."
 }
 ```
+Semantica dei due campi (dal 2026-08-04, allineata su tutte le superfici):
+
+- `validators_count` — **persone** distinte (hash) fra le submission non rifiutate, lo stesso denominatore della barra pubblica;
+- `validators_opted_in` — **persone** della Hall (submission valide + consenso + nickname): la stessa popolazione elencata in `supporters.json`.
+
 
 ---
 
 ## `supporters.json`
 
-Lista Validator opt-in per pagina pubblica [marcofly.app/supporters](https://marcofly.app/supporters).
+Lista Validator opt-in per la Hall pubblica su [marcofly.app/open-review](https://marcofly.app/open-review).
 
 ```json
 {

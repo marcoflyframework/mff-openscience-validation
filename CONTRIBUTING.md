@@ -10,13 +10,13 @@ Grazie per voler partecipare. Ogni contributo aiuta la community a capire **se e
 
 Il metodo più diretto. Lo può fare chiunque sappia copiare-incollare.
 
-1. Vai su **[marcofly.app/contribute-time](https://marcofly.app/contribute-time)**
+1. Vai su **[marcofly.app/contribute/time](https://marcofly.app/contribute/time)**
 2. Ti viene mostrato un **prompt random** dal Prompt Bank
 3. Copialo in DUE AI a tua scelta — **una senza MFF, una con MFF**
    - Esempi AI: ChatGPT, Claude, Gemini, Llama (HuggingFace), Mistral chat, Perplexity
    - Per usare MFF: vai su [app.marcofly.app](https://app.marcofly.app), modalità AUTO o MFF-EX
 4. Incolla i due output nel form, dai un **voto 1-5 stelle** a ciascuno (vedi [RUBRIC.md](RUBRIC.md))
-5. Submit. Ricevi **750 crediti MFF gratis** + badge Validator
+5. Submit. Dopo la conferma della tua email e la revisione umana ricevi **crediti MFF gratis** — 100 per la prima submission approvata, poi a scaglioni (50 per la 2ª–3ª, 25 per la 4ª–10ª, 10 dalla 11ª; il saldo non scende mai sotto 100) — e il badge Validator. Dettagli in [README — «Cosa ricevi»](README.md#-cosa-ricevi).
 
 **Tu non devi capire la statistica**. Te ne occupi di una sola cosa: copia-incolla onesto + voto onesto.
 
@@ -54,7 +54,7 @@ Sei a tuo agio con Python? Aiutaci a verificare l'analisi.
 4. Esegui tutte le celle: `jupyter nbconvert --execute --to html ANALYSIS.ipynb`
 5. Confronta i tuoi risultati con quelli pubblicati. Se trovi discrepanze, apri **Issue tipo "Analysis Bug"**.
 
-I dati sono in [`DATA/submissions.csv`](DATA/submissions.csv) (aggiornato ogni 24h via GH Action).
+I dati sono in [`DATA/submissions.csv`](DATA/submissions.csv) (pubblicato dal Worker `mff-cron` ogni notte alle 03:00 UTC, solo se qualcosa è cambiato).
 
 ---
 
@@ -82,19 +82,22 @@ GDPR Right to be Forgotten: scrivi a `privacy@marcofly.app` con hash submission 
 
 Tutti i contributor compaiono in [CONTRIBUTORS.md](CONTRIBUTORS.md) se hanno opt-in. Livelli badge:
 
-| Submission count | Badge |
+| Submission valide | Badge |
 |---|---|
-| 1+ | 🥉 Validator |
-| 5+ | 🥈 Validator Active |
-| 25+ | 🥇 Validator Senior (può fare annotator review per H2) |
-| 100+ | 💎 Validator Elite (mention nel report finale OSF + invito a co-authorship se sostanziale) |
+| 1+ | 🌱 Validatore |
+| 3+ | 🥉 Bronzo |
+| 10+ | 🥈 Argento |
+| 25+ | 🥇 Oro (può fare annotator review per H2) |
+| 50+ | 💎 Diamante (mention nel report finale OSF + invito a co-authorship se sostanziale) |
+
+(Scala identica a quella del sito e del pannello: la stessa persona non può avere due gradi diversi.)
 
 ---
 
 ## 💬 Domande?
 
 - Apri **[Issue](https://github.com/marcoflyframework/mff-openscience-validation/issues)** su GitHub per discussioni pubbliche
-- Email: `info@marcofly.app` per privacy / questioni sensibili
+- Email: `privacy@marcofly.app` per privacy e questioni sensibili · `info@marcofly.app` per tutto il resto
 - Documentation framework: [marcofly.app/mff](https://marcofly.app/mff)
 
 ---

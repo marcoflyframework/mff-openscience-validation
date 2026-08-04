@@ -551,7 +551,7 @@ Per ogni prompt:
 
 ## 📋 Note finali
 
-- **Randomizzazione**: il sito `/contribute-time.html` carica UN prompt random dal Prompt Bank ad ogni visita.
+- **Randomizzazione**: la pagina [marcofly.app/contribute/time](https://marcofly.app/contribute/time) carica UN prompt random dal Prompt Bank ad ogni visita.
 - **Bilanciamento**: il sistema cerca di bilanciare la distribuzione (es. se categoria "Fatti" è già satura, propone "Creatività").
 - **Estendibilità**: nuovi prompt possono essere suggeriti via [Issue su GitHub](https://github.com/marcoflyframework/mff-openscience-validation/issues/new?template=prompt_suggestion.md). Saranno aggiunti dopo review (no duplicati, no bias, no offensive).
 - **Lingua submitter**: il submitter dichiara quale lingua ha usato. Disponibili IT/EN. Altre lingue future.

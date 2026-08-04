@@ -2,7 +2,7 @@
 
 > Lista dei **Validator Attivi** che hanno opt-in nel form. Ordinata alfabeticamente per nickname.
 >
-> Auto-aggiornata via [GitHub Action](.github/workflows/sync-stats.yml) ogni 24h da [marcofly.app/api/validation-supporters](https://marcofly.app/api/validation-supporters).
+> Auto-aggiornata dal Worker `mff-cron` ogni notte alle 03:00 UTC da [marcofly.app/api/validation-supporters](https://marcofly.app/api/validation-supporters) (v. [.github/PERCHE-NIENTE-SYNC-WORKFLOW.md](.github/PERCHE-NIENTE-SYNC-WORKFLOW.md)).
 
 ---
 
@@ -10,7 +10,7 @@
 
 - **Validator totali**: vedi [DATA/stats.json](DATA/stats.json) (campo `validators_count`)
 - **Submission totali**: vedi [DATA/stats.json](DATA/stats.json) (campo `total_submissions`)
-- **Goal progresso**: vedi [marcofly.app/contribute-time](https://marcofly.app/contribute-time)
+- **Goal progresso**: vedi [marcofly.app/contribute/time](https://marcofly.app/contribute/time)
 
 ---
 
@@ -26,20 +26,21 @@ _Nessun contributor opt-in ancora. Siate i primi!_
 
 ## Badge livelli
 
-| Badge | Submission count |
+| Badge | Submission valide |
 |---|---|
-| 🥉 Validator | 1+ |
-| 🥈 Validator Active | 5+ |
-| 🥇 Validator Senior | 25+ |
-| 💎 Validator Elite | 100+ |
+| 🌱 Validatore | 1+ |
+| 🥉 Bronzo | 3+ |
+| 🥈 Argento | 10+ |
+| 🥇 Oro | 25+ |
+| 💎 Diamante | 50+ |
 
-I 💎 sono invitati come **annotatori indipendenti** per H2 (calibrazione etichette), vedi [PROTOCOL.md §5](PROTOCOL.md#5-inclusion--exclusion-criteria).
+(Scala identica a sito e pannello — v. README.) I 🥇 e 💎 sono invitati come **annotatori indipendenti** per H2 (calibrazione etichette), vedi [PROTOCOL.md §5](PROTOCOL.md#5-inclusion--exclusion-criteria).
 
 ---
 
 ## Come comparire qui
 
-Nel form di submission su [marcofly.app/contribute-time](https://marcofly.app/contribute-time) spunta:
+Nel form di submission su [marcofly.app/contribute/time](https://marcofly.app/contribute/time) spunta:
 
 > ☐ **Voglio essere nominato/a nei Supporter Attivi pubblici**
 

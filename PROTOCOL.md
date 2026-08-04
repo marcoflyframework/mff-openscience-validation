@@ -105,7 +105,7 @@ Per H2 (calibrazione) servono **annotatori indipendenti** (≥ 3) che verifichin
 
 ## 6. Open data e riproducibilità
 
-- **Submissions** pubblicate in `DATA/submissions.csv` (anonymized: hash email, no IP) aggiornate via GH Action ogni 24h
+- **Submissions** pubblicate in `DATA/submissions.csv` (anonymized: hash email, no IP), spinte dal Worker `mff-cron` ogni notte alle 03:00 UTC — tutto-o-niente, e solo se qualcosa è cambiato
 - **Stats aggregate** in `DATA/stats.json`
 - **Analysis notebook** [`ANALYSIS.ipynb`](ANALYSIS.ipynb) riproducibile con `pip install -r requirements.txt` + `jupyter nbconvert --execute`
 - **OSF deposit**: snapshot CSV + notebook + report ogni milestone (100, 250, 500, 750, 1000) uploadato manualmente
@@ -116,7 +116,7 @@ Per H2 (calibrazione) servono **annotatori indipendenti** (≥ 3) che verifichin
 
 | Dato | Finalità | Conservazione | Base legale |
 |---|---|---|---|
-| `submitter_email` | Validazione + accredito crediti + dedup | 12 mesi poi anonymized | Esecuzione contratto (volontariato + reward) |
+| `submitter_email` | Validazione + accredito crediti + dedup | Fino a richiesta di cancellazione (GDPR) — dichiarata anche nella privacy del sito, §6-bis | Esecuzione contratto (volontariato + reward) |
 | `nickname` | Pagina Supporter (solo se opt-in) | Fino a revoca | Consenso esplicito |
 | `output_baseline`, `output_mff` | Analisi statistica | Indefinita (pubblicato come open data) | Consenso esplicito + interesse legittimo ricerca |
 | `ip_hash` | Anti-spam, rate limit | 30 giorni | Interesse legittimo sicurezza |
@@ -124,17 +124,16 @@ Per H2 (calibrazione) servono **annotatori indipendenti** (≥ 3) che verifichin
 
 Tutti i submitter devono confermare consenso esplicito al momento della submission. Email verification obbligatoria (link Resend).
 
-GDPR Right to be Forgotten: submission cancellabile su richiesta a `privacy@marcofly.app` con citazione hash submission. Dati già pubblicati in CSV verranno anonimizzati in 30 giorni dalla richiesta.
+GDPR Right to be Forgotten: submission cancellabile su richiesta a `privacy@marcofly.app` con citazione hash submission. Le righe cancellate spariscono dal CSV pubblico al primo aggiornamento successivo (entro 24 ore).
 
 ---
 
 ## 8. Quality assurance
 
 ### Anti-spam
-- reCAPTCHA v3 invisible (score < 0.5 → flag manual review)
-- Rate limit IP: max 50/giorno, max 5/ora
-- Email verification (link cliccato entro 24h)
-- Manual review admin su flag automatici
+- Cloudflare Turnstile sul form (verifica server-side fail-closed: senza esito valido la submission non entra)
+- Email verification obbligatoria (link Resend; il credito parte solo da email dimostrata)
+- Manual review admin di OGNI submission prima dell'accredito
 
 ### Honesty check
 - Random spot check da admin: re-eseguire prompt e confrontare con submission

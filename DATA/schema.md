@@ -88,7 +88,7 @@ Statistiche aggregate per la progress bar + dashboard pubblica.
 Semantica dei due campi (dal 2026-08-04, allineata su tutte le superfici):
 
 - `validators_count` — **persone** distinte (hash) fra le submission non rifiutate, lo stesso denominatore della barra pubblica;
-- `validators_opted_in` — **persone** della Hall (submission valide + consenso + nickname): la stessa popolazione elencata in `supporters.json`.
+- `validators_opted_in` — **nickname distinti** della Hall (submission valide + consenso + nickname): il numero di VOCI della lista pubblica, identico per costruzione alle entry di `supporters.json` e a «Supporter pubblici» su marcofly.app/contribute/time.
 
 
 ---
